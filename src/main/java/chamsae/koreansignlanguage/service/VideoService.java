@@ -30,13 +30,13 @@ public class VideoService {
     private VideoRepository videoRepository;
 
     public List<Video> searchByText(String text) {
-        return videoRepository.findByTitle(text);
+        return videoRepository.findByTitleContaining(text);
     }
 
     public List<Video> searchByPhoto(MultipartFile files) {
         //springToFlask 사용
         String text = "";
-        return videoRepository.findByTitle(text);
+        return videoRepository.findByTitleContaining(text);
     }
 
     public String springToFlask(String text) {

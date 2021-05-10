@@ -5,6 +5,7 @@ import chamsae.koreansignlanguage.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,9 +24,9 @@ public class VideoController {
     @Autowired
     private VideoService videoService;
 
-    @GetMapping
+    @GetMapping("video")
     @ResponseBody
-    public List<Video> searchByText(String text){
+    public List<Video> searchByText(@RequestParam("text") String text){
         return videoService.searchByText(text);
     }
 

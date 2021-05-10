@@ -1,23 +1,11 @@
 package chamsae.koreansignlanguage.repository;
 
 import chamsae.koreansignlanguage.domain.Video;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class VideoRepository {
+public interface VideoRepository extends JpaRepository<Video, Integer> {
 
-    /*
-    * 타이틀조회 findByTitle
-    */
-
-    public List<Video> findByTitle(String title) {
-        return new ArrayList<>();
-    }
-
-    public List<Video> findById(Long id) {
-        return new ArrayList<>();
-    }
+    List<Video> findByTitleContaining(String title);
 }
