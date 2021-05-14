@@ -19,9 +19,9 @@ public class ScrapController {
     @Autowired
     private ScrapService scrapService;
 
-    public List<Video> findAll(String email) {
-        return scrapService.findAll(email);
-    }
+//    public List<Video> findAll(String email) {
+//        return scrapService.findAll(email);
+//    }
 
     public Boolean addToScrap(String email, Long videoId) {
         return scrapService.addToScrap(email, videoId);

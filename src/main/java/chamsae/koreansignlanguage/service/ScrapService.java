@@ -24,12 +24,12 @@ public class ScrapService {
     @Autowired
     private VideoRepository videoRepository;
 
-    public List<Video> findAll(String email) {
-        List<Scrap> list = scrapRepository.findAll(email);
-        //list의 id를 통해 video에서 찾음
-        Long id = 0L;
-        return videoRepository.findById(id);
-    }
+//    public List<Video> findAll(String email) {
+//        List<Scrap> list = scrapRepository.findAll(email);
+//        //list의 id를 통해 video에서 찾음
+//        int id = 0;
+//        return videoRepository.findById(id).stream().findAny();
+//    }
 
     public Boolean addToScrap(String email, Long videoId) {
         return scrapRepository.save(new Scrap());
