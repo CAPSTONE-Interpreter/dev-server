@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class VideoController {
@@ -24,10 +26,13 @@ public class VideoController {
     @Autowired
     private VideoService videoService;
 
-    @GetMapping("video")
+    @GetMapping("videos")
     @ResponseBody
-    public List<Video> searchByText(@RequestParam("text") String text){
-        return videoService.searchByText(text);
+    public Map<String, String> searchByText(@RequestParam("text") String text){
+        HashMap<String, String> result = new HashMap<>();
+        List<Video> list = videoService.searchByText(text);
+        list.forEach(video -> result.put(video.getTitle(), video.getUrl()));
+        return result;
     }
 
     public List<Video> searchByPhoto(MultipartFile files) {
