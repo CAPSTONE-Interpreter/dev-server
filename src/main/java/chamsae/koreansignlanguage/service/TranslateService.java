@@ -1,15 +1,17 @@
 package chamsae.koreansignlanguage.service;
 
+import chamsae.koreansignlanguage.util.ConnectWithFlask;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TranslateService {
 
-    public String springToFlask(List<String> list) {
-        //http 통신으로 post 하여 합쳐진 문장 받아옴
-        return "성공";
+    @Autowired
+    private ConnectWithFlask connectWithFlask;
+
+    public String springToFlask(String word) {
+        return connectWithFlask.springToFlask(word);
     }
 
 }

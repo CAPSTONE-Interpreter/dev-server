@@ -1,6 +1,6 @@
 package chamsae.koreansignlanguage.controller;
 
-import chamsae.koreansignlanguage.util.FileUploadUtils;
+import chamsae.koreansignlanguage.util.ConnectWithFlask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class TestController {
 
     @Autowired
-    FileUploadUtils fileUploadUtils;
+    ConnectWithFlask connectWithFlask;
 
     @PostMapping("test")
     @ResponseBody
@@ -40,7 +40,7 @@ public class TestController {
         if(text.isEmpty())
             return "실패";
         else {
-            String response = fileUploadUtils.springToFlask(text);
+            String response = connectWithFlask.springToFlask(text);
             log.info(response);
             return response;
         }
