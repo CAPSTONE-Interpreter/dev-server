@@ -30,4 +30,14 @@ public class MemberServiceIntegrationTest {
         //then
         Assertions.assertThat(result).isTrue();
     }
+
+    @Test
+    void 로그인() {
+        String email = "tttt3333@gmail.com";
+        String pw = "1234";
+
+        Boolean result = memberService.LogIn(email, pw);
+
+        Assertions.assertThat(result).isTrue();
+    }
 }

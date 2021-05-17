@@ -33,14 +33,15 @@ public class MemberService {
         else return false; //비밀번호가 일치하지 않음
     }
 
-    public Boolean validatePassword(String pwd1, String pwd2) {
-        if (pwd1.equals(pwd2)) return true;
+    public Boolean validatePassword(String pw1, String pw2) {
+        if (pw1.equals(pw2)) return true;
         else return false;
     }
 
-//    public Boolean LogIn(String email, String pwd) {
-//        Member member = memberRepository.findByEmail(email);
-//        //멤버의 비밀번호 디코드 하여 pwd와 비교
-//        return true;
-//    }
+    public Boolean LogIn(String email, String pw) {
+        Member member = memberRepository.findByEmail(email);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(encoder.matches(pw, member.getPassword())) return true;
+        else return false;
+    }
 }
