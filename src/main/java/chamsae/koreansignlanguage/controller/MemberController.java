@@ -26,14 +26,14 @@ public class MemberController {
     @PostMapping("members/new")
     @ResponseBody
     public Boolean join(@RequestBody MemberForm memberForm) {
-        log.info("member/new 실행 - 회원가입");
+        log.info("member/new 실행 - 회원가입 : {}", memberForm.toString());
         return memberService.join(memberForm);
     }
 
     @PostMapping("members/login")
     @ResponseBody
     public Boolean logIn(@RequestParam("email") String email, @RequestParam("password") String pw) {
-        log.info("members/login 실행 - 로그인");
+        log.info("members/login 실행 - 로그인 : {}", email);
         return memberService.LogIn(email, pw);
     }
 
