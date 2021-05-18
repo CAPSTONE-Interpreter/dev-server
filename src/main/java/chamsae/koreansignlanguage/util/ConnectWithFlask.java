@@ -48,7 +48,7 @@ public class ConnectWithFlask {
             e.printStackTrace();
         }
 
-        log.info(jsonObject.get("result").toString());
+        log.info("텍스트 조합 완성 문자 : {}", jsonObject.get("result").toString());
         return jsonObject.get("result").toString();
     }
 
