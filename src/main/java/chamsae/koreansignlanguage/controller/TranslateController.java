@@ -18,6 +18,7 @@ public class TranslateController {
     @GetMapping("translate")
     @ResponseBody
     public String makeSentence(@RequestParam("word") String word) {
+        log.info("translate 실행 - 단어 조합");
         return translateService.springToFlask(word);
     }
 }
