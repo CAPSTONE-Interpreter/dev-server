@@ -31,7 +31,7 @@ public class VideoController {
     @GetMapping("videos")
     @ResponseBody
     public Map<String, String> searchByText(@RequestParam("text") String text){
-        log.info("videos 실행 - 텍스트 검색");
+        log.info("videos 실행 - 텍스트 검색 : {}", text);
         HashMap<String, String> result = new HashMap<>();
         List<Video> list = videoService.searchByText(text);
         list.forEach(video -> result.put(video.getTitle(), video.getUrl()));
