@@ -40,7 +40,7 @@ public class TestController {
         if(text.isEmpty())
             return "실패";
         else {
-            String response = connectWithFlask.springToFlask(text);
+            String response = connectWithFlask.sendLetters(text);
             log.info(response);
             return response;
         }
