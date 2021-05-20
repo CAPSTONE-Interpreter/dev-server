@@ -5,9 +5,7 @@ import chamsae.koreansignlanguage.service.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -38,8 +36,10 @@ public class VideoController {
         return result;
     }
 
-    public List<Video> searchByPhoto(MultipartFile files) {
-        return videoService.searchByPhoto(files);
+    @PostMapping("videos/photo")
+    @ResponseBody
+    public Map<String, Map> searchByPhoto(@RequestPart("file") MultipartFile file) {
+        return videoService.searchByPhoto(file);
     }
 
 }

@@ -2,7 +2,9 @@ package chamsae.koreansignlanguage.service;
 
 import chamsae.koreansignlanguage.domain.Video;
 import chamsae.koreansignlanguage.repository.VideoRepository;
+import chamsae.koreansignlanguage.util.ConnectWithFlask;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +15,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -29,40 +34,37 @@ public class VideoService {
     @Autowired
     private VideoRepository videoRepository;
 
+    @Autowired
+    private ConnectWithFlask connectWithFlask;
+
     public List<Video> searchByText(String text) {
         return videoRepository.findByTitleContaining(text);
     }
 
-    public List<Video> searchByPhoto(MultipartFile files) {
-        //springToFlask 사용
-        String text = "";
-        return videoRepository.findByTitleContaining(text);
-    }
+    public Map<String, Map> searchByPhoto(MultipartFile files) {
 
-    public String springToFlask(String text) {
-        String url = "http://76e4d8fcdce9.ngrok.io/hello/" + text; //get url text 파라미터 넣어서 보내
-        String sb = "";
+        Map<String, Map> result = new HashMap<>();
+
         try {
-            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            ArrayList<String> response = connectWithFlask.sendImage(files);
 
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-
-            String line = null;
-
-            while ((line = br.readLine()) != null) {
-                sb = sb + line + "\n";
+            for(String word : response) {
+                Map<String, String> video = new HashMap<>();
+                List<Video> list = videoRepository.findByTitleContaining(word);
+                for (Video v :
+                        list) {
+                    video.put(v.getTitle(), v.getUrl());
+                }
+                result.put(word, video);
             }
-            br.close();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.info("사진 검색 결과 최종 반환 : {}", result);
+
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        log.info(sb.toString());
-        return sb.toString();
+        return result;
     }
+
 }
