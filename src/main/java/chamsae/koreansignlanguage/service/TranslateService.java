@@ -11,7 +11,7 @@ public class TranslateService {
     private ConnectWithFlask connectWithFlask;
 
     public String springToFlask(String word) {
-        return connectWithFlask.springToFlask(word);
+        return connectWithFlask.sendLetters(word);
     }
 
 }
