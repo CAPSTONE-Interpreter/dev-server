@@ -39,6 +39,7 @@ public class VideoController {
     @PostMapping("videos/photo")
     @ResponseBody
     public Map<String, Map> searchByPhoto(@RequestPart("file") MultipartFile file) {
+        log.info("videos/photo 실행 - 사 검색 : {}", file);
         return videoService.searchByPhoto(file);
     }
 
