@@ -5,16 +5,12 @@ import chamsae.koreansignlanguage.repository.VideoRepository;
 import chamsae.koreansignlanguage.util.ConnectWithFlask;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,25 +33,39 @@ public class VideoService {
     @Autowired
     private ConnectWithFlask connectWithFlask;
 
-    public List<Video> searchByText(String text) {
-        return videoRepository.findByTitleContaining(text);
+    public List<Map> searchByText(String text) {
+        List<Map> result = new ArrayList<>();
+        List<Video> list = videoRepository.findByTitleContaining(text);
+        for(Video v : list) {
+            Map<String, String> videoInfo = new HashMap<>();
+            videoInfo.put("title", v.getTitle());
+            videoInfo.put("url", v.getUrl());
+            result.add(videoInfo);
+        }
+        log.info("텍스트 검색 결과 : {}", result);
+        return result;
     }
 
-    public Map<String, Map> searchByPhoto(MultipartFile files) {
+    public JSONArray searchByPhoto(MultipartFile file) {
 
-        Map<String, Map> result = new HashMap<>();
+        JSONArray result = new JSONArray();
 
         try {
-            ArrayList<String> response = connectWithFlask.sendImage(files);
-
-            for(String word : response) {
-                Map<String, String> video = new HashMap<>();
-                List<Video> list = videoRepository.findByTitleContaining(word);
-                for (Video v :
-                        list) {
-                    video.put(v.getTitle(), v.getUrl());
+            ArrayList<String> response = connectWithFlask.sendImage(file);
+            for(String text : response) {
+                JSONObject ocrResult = new JSONObject();
+                JSONArray searchResult = new JSONArray();
+                ocrResult.put("text", text);
+                List<Video> list = videoRepository.findByTitleContaining(text);
+                log.info("{} 검색 결과 : {}", text, list.toString());
+                for(Video v : list) {
+                    JSONObject videoInfo = new JSONObject();
+                    videoInfo.put("title", v.getTitle());
+                    videoInfo.put("url", v.getUrl());
+                    searchResult.add(videoInfo);
                 }
-                result.put(word, video);
+                ocrResult.put("result", searchResult);
+                result.add(ocrResult);
             }
 
             log.info("사진 검색 결과 최종 반환 : {}", result);
