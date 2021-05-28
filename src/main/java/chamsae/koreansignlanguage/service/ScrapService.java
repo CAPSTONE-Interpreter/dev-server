@@ -4,19 +4,17 @@ import chamsae.koreansignlanguage.domain.Scrap;
 import chamsae.koreansignlanguage.domain.Video;
 import chamsae.koreansignlanguage.repository.ScrapRepository;
 import chamsae.koreansignlanguage.repository.VideoRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class ScrapService {
-
-    /*
-     * 이메일로 스크랩 테이블 긁어오기 findAll(String email)
-     * 스크랩 추가 addToScrap(String email, Long videoId)
-     * 스크랩 삭제 deleteFromScrap(String email, Long videoId)
-     */
 
     @Autowired
     private ScrapRepository scrapRepository;
@@ -24,18 +22,43 @@ public class ScrapService {
     @Autowired
     private VideoRepository videoRepository;
 
-//    public List<Video> findAll(String email) {
-//        List<Scrap> list = scrapRepository.findAll(email);
-//        //list의 id를 통해 video에서 찾음
-//        int id = 0;
-//        return videoRepository.findById(id).stream().findAny();
-//    }
+    public JSONArray searchByEmail(String email) {
 
-    public Boolean addToScrap(String email, Long videoId) {
-        return scrapRepository.save(new Scrap());
+        JSONArray result = new JSONArray();
+
+        List<Scrap> list = scrapRepository.findByEmail(email);
+
+        for (Scrap s :
+                list) {
+            JSONObject videoInfo = new JSONObject();
+            Video video = videoRepository.findById(s.getId());
+            videoInfo.put("title", video.getTitle());
+            videoInfo.put("url", video.getUrl());
+            videoInfo.put("id", video.getId());
+            result.add(videoInfo);
+        }
+
+        log.info("{} - 스크랩 리스트 : {}", email, result.toString());
+
+        return result;
     }
 
-    public Boolean deleteFromScrap(String email, Long videoId) {
-        return scrapRepository.delete(new Scrap());
+    public void saveScrap(String email, int videoId) {
+
+        Scrap scrap = new Scrap();
+        scrap.setEmail(email);
+        scrap.setId(videoId);
+
+        scrapRepository.save(scrap);
+        log.info("{} 스크랩 추가 완료: {}", email, videoId);
+    }
+
+    public void deleteScrap(String email, int videoId) {
+        Scrap scrap = new Scrap();
+        scrap.setEmail(email);
+        scrap.setId(videoId);
+
+        scrapRepository.delete(scrap);
+        log.info("{} 스크랩 삭제 완료: {}", email, videoId);
     }
 }

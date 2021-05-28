@@ -12,9 +12,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/videos/**", "/translate").permitAll()
-                .antMatchers("/members/**").permitAll()
-                .antMatchers("/test/**").permitAll()
+                .antMatchers(
+                        "/videos/**",
+                        "/translate",
+                        "/scrap/**",
+                        "/members/**",
+                        "/test/**"
+                ).permitAll()
+
         ;
     }
 }

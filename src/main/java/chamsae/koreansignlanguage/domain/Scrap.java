@@ -3,16 +3,26 @@ package chamsae.koreansignlanguage.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
-//@Entity
+@Entity
+@IdClass(ScrapId.class)
 public class Scrap {
 
 //    @Id
-    private String email;
+//    @ManyToOne
+//    @JoinColumn(name = "Member_email")
+//    private Member member;
+//
 //    @Id
-    private Long id;
+//    @ManyToOne
+//    @JoinColumn(name = "Video_id")
+//    private Video video;
+
+    @Id
+    private String email;
+    @Id
+    private int id;
 }

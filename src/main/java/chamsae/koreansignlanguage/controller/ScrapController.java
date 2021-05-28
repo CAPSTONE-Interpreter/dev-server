@@ -1,12 +1,14 @@
 package chamsae.koreansignlanguage.controller;
 
-import chamsae.koreansignlanguage.domain.Video;
 import chamsae.koreansignlanguage.service.ScrapService;
+import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
+@Slf4j
 @Controller
 public class ScrapController {
 
@@ -19,15 +21,24 @@ public class ScrapController {
     @Autowired
     private ScrapService scrapService;
 
-//    public List<Video> findAll(String email) {
-//        return scrapService.findAll(email);
-//    }
-
-    public Boolean addToScrap(String email, Long videoId) {
-        return scrapService.addToScrap(email, videoId);
+    @GetMapping("scrap")
+    @ResponseBody
+    public JSONArray getScrap(@RequestParam("email") String email) {
+        log.info("scrap 실행 - 해당 이메일 스크랩 리스트 불러오기 : {}", email);
+        return scrapService.searchByEmail(email);
     }
 
-    public Boolean deleteFromScrap(String email, Long videoId) {
-        return scrapService.deleteFromScrap(email, videoId);
+    @PutMapping("scrap/{email}/{videoId}")
+    @ResponseBody
+    public void addToScrap(@PathVariable("email") String email, @PathVariable("videoId") int videoId) {
+        log.info("scrap/{}/{} 실행 - 해당 스크랩 추가", email, videoId);
+        scrapService.saveScrap(email, videoId);
+    }
+
+    @DeleteMapping("scrap/{email}/{videoId}")
+    @ResponseBody
+    public void deleteFromScrap(@PathVariable("email") String email, @PathVariable("videoId") int videoId) {
+        log.info("scrap/{}/{} 실행 - 해당 스크랩 삭제", email, videoId);
+        scrapService.deleteScrap(email, videoId);
     }
 }
