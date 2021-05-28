@@ -12,9 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -24,7 +22,6 @@ public class VideoService {
     /*
      * 텍스트 영상 검색 searchByText -> 텍스트 검색 들어오면 비디오 리파짓토리에서 찾아서 줘야함
      * OCR 영상 검색 searchByPhoto -> 이미지 분석 서버로 전달 후 리스트 받아 해당 영상들 전달
-     * 사진 서버간 전달 springToFlask
      */
 
     @Autowired
@@ -33,13 +30,14 @@ public class VideoService {
     @Autowired
     private ConnectWithFlask connectWithFlask;
 
-    public List<Map> searchByText(String text) {
-        List<Map> result = new ArrayList<>();
+    public JSONArray searchByText(String text) {
+        JSONArray result = new JSONArray();
         List<Video> list = videoRepository.findByTitleContaining(text);
         for(Video v : list) {
-            Map<String, String> videoInfo = new HashMap<>();
+            JSONObject videoInfo = new JSONObject();
             videoInfo.put("title", v.getTitle());
             videoInfo.put("url", v.getUrl());
+            videoInfo.put("id", v.getId());
             result.add(videoInfo);
         }
         log.info("텍스트 검색 결과 : {}", result);
@@ -62,6 +60,7 @@ public class VideoService {
                     JSONObject videoInfo = new JSONObject();
                     videoInfo.put("title", v.getTitle());
                     videoInfo.put("url", v.getUrl());
+                    videoInfo.put("id", v.getId());
                     searchResult.add(videoInfo);
                 }
                 ocrResult.put("result", searchResult);

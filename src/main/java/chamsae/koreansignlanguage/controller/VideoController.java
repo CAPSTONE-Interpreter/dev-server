@@ -26,7 +26,7 @@ public class VideoController {
 
     @GetMapping("videos")
     @ResponseBody
-    public List<Map> searchByText(@RequestParam("text") String text){
+    public JSONArray searchByText(@RequestParam("text") String text){
         log.info("videos 실행 - 텍스트 검색 : {}", text);
         return videoService.searchByText(text);
     }
@@ -34,7 +34,7 @@ public class VideoController {
     @PostMapping("videos/photo")
     @ResponseBody
     public JSONArray searchByPhoto(@RequestPart("file") MultipartFile file) {
-        log.info("videos/photo 실행 - 사 검색 : {}", file);
+        log.info("videos/photo 실행 - 사진 검색 : {}", file);
         return videoService.searchByPhoto(file);
     }
 
