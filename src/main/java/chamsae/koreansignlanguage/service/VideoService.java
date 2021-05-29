@@ -53,18 +53,19 @@ public class VideoService {
             for(String text : response) {
                 JSONObject ocrResult = new JSONObject();
                 JSONArray searchResult = new JSONArray();
-                ocrResult.put("text", text);
                 List<Video> list = videoRepository.findByTitleContaining(text);
-                log.info("{} 검색 결과 : {}", text, list.toString());
-                for(Video v : list) {
-                    JSONObject videoInfo = new JSONObject();
-                    videoInfo.put("title", v.getTitle());
-                    videoInfo.put("url", v.getUrl());
-                    videoInfo.put("id", v.getId());
-                    searchResult.add(videoInfo);
+                if(!list.isEmpty()) {
+                    ocrResult.put("text", text);
+                    for (Video v : list) {
+                        JSONObject videoInfo = new JSONObject();
+                        videoInfo.put("title", v.getTitle());
+                        videoInfo.put("url", v.getUrl());
+                        videoInfo.put("id", v.getId());
+                        searchResult.add(videoInfo);
+                    }
+                    ocrResult.put("result", searchResult);
+                    result.add(ocrResult);
                 }
-                ocrResult.put("result", searchResult);
-                result.add(ocrResult);
             }
 
             log.info("사진 검색 결과 최종 반환 : {}", result);
