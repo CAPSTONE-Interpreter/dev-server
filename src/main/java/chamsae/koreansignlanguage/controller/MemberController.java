@@ -62,15 +62,21 @@ public class MemberController {
         return ResponseEntity.created(location).build();
     }
 
-    //로그인
-//    @GetMapping("members")
-//    public Boolean logIn(@RequestParam("email") String email, @RequestParam("password") String pw) {
-//        log.info("members/login 실행 - 로그인 : {}", email);
-//        return memberService.LogIn(email, pw);
-//    }
+    //회원 조회
+    @ApiOperation(value = "회원 조회", notes = "회원을 조회합니다.")
+    @GetMapping("members/{id}")
+    public ResponseEntity<MemberDTO> getMem(@ApiParam(value = "회원 ID", required = true) @PathVariable("id") long id) {
+        log.info("members/{} 실행 - 회원 조회 : {}", id, id);
 
-//    public Boolean deleteId(String email, String pw) {
-//        return true;
-//    }
+        //조회 실패
+        //1. 없는 아이디로 접근
+
+        //조회 성공
+        return ResponseEntity.ok(memberService.getMem(id));
+    }
+
+    public Boolean deleteId(String email, String pw) {
+        return true;
+    }
 
 }
