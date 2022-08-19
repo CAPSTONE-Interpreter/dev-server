@@ -1,7 +1,8 @@
 package chamsae.koreansignlanguage.service;
 
+import chamsae.koreansignlanguage.DTO.MemberDTO;
 import chamsae.koreansignlanguage.controller.MemberForm;
-import chamsae.koreansignlanguage.domain.Member;
+import chamsae.koreansignlanguage.entity.Member;
 import chamsae.koreansignlanguage.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,13 +25,16 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public Boolean join(MemberForm memberForm) {
-        if(validatePassword(memberForm.getPassword(), memberForm.getPassword2())) {
-            Member member = memberForm.toEntity();
-            memberRepository.save(member);
-            return true;
-        }
-        else return false; //비밀번호가 일치하지 않음
+    //회원 가입
+    public Member join(MemberDTO memberDTO) {
+            Member member = memberDTO.toEntity();
+            return memberRepository.save(member);
+    }
+
+    //중복 이메일 체크
+    public boolean checkEmail(MemberDTO memberDTO) {
+        if(memberRepository.findByEmail(memberDTO.getEmail()) == null) return true; //가입 가능
+        return false; //가입 불가능
     }
 
     public Boolean validatePassword(String pw1, String pw2) {
@@ -41,7 +45,7 @@ public class MemberService {
     public Boolean LogIn(String email, String pw) {
         Member member = memberRepository.findByEmail(email);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(encoder.matches(pw, member.getPassword())) return true;
+        if(encoder.matches(pw, member.getPwd())) return true;
         else return false;
     }
 }
