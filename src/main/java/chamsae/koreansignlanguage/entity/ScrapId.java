@@ -1,4 +1,4 @@
-package chamsae.koreansignlanguage.domain;
+package chamsae.koreansignlanguage.entity;
 
 import java.io.Serializable;
 import java.util.Objects;

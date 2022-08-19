@@ -21,21 +21,21 @@ public class ScrapController {
     @Autowired
     private ScrapService scrapService;
 
-    @GetMapping("scrap")
+    @GetMapping("scraps")
     @ResponseBody
     public JSONArray getScrap(@RequestParam("email") String email) {
         log.info("scrap 실행 - 해당 이메일 스크랩 리스트 불러오기 : {}", email);
         return scrapService.searchByEmail(email);
     }
 
-    @PutMapping("scrap/{email}/{videoId}")
+    @PutMapping("scraps/{email}/{videoId}")
     @ResponseBody
     public void addToScrap(@PathVariable("email") String email, @PathVariable("videoId") int videoId) {
         log.info("scrap/{}/{} 실행 - 해당 스크랩 추가", email, videoId);
         scrapService.saveScrap(email, videoId);
     }
 
-    @DeleteMapping("scrap/{email}/{videoId}")
+    @DeleteMapping("scraps/{email}/{videoId}")
     @ResponseBody
     public void deleteFromScrap(@PathVariable("email") String email, @PathVariable("videoId") int videoId) {
         log.info("scrap/{}/{} 실행 - 해당 스크랩 삭제", email, videoId);

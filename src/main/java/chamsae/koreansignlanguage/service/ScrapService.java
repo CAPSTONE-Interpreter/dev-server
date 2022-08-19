@@ -1,7 +1,7 @@
 package chamsae.koreansignlanguage.service;
 
-import chamsae.koreansignlanguage.domain.Scrap;
-import chamsae.koreansignlanguage.domain.Video;
+import chamsae.koreansignlanguage.entity.Scrap;
+import chamsae.koreansignlanguage.entity.Video;
 import chamsae.koreansignlanguage.repository.ScrapRepository;
 import chamsae.koreansignlanguage.repository.VideoRepository;
 import lombok.extern.slf4j.Slf4j;

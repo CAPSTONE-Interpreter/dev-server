@@ -1,6 +1,6 @@
 package chamsae.koreansignlanguage.service;
 
-import chamsae.koreansignlanguage.domain.Video;
+import chamsae.koreansignlanguage.entity.Video;
 import chamsae.koreansignlanguage.repository.VideoRepository;
 import chamsae.koreansignlanguage.util.ConnectWithFlask;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package chamsae.koreansignlanguage.repository;
 
-import chamsae.koreansignlanguage.domain.Scrap;
-import chamsae.koreansignlanguage.domain.ScrapId;
+import chamsae.koreansignlanguage.entity.Scrap;
+import chamsae.koreansignlanguage.entity.ScrapId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

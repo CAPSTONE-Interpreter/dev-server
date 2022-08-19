@@ -1,6 +1,6 @@
 package chamsae.koreansignlanguage.repository;
 
-import chamsae.koreansignlanguage.domain.Video;
+import chamsae.koreansignlanguage.entity.Video;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

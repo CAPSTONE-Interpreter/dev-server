@@ -31,7 +31,6 @@ import java.util.Map;
 @Slf4j
 @Component
 public class ConnectWithFlask {
-    
     final String FLASK_URL = "http://52.78.237.179:5000/";
 
     final String boundary = "*****";
@@ -60,11 +59,14 @@ public class ConnectWithFlask {
             br.close();
 
         } catch (MalformedURLException e) {
+
             e.printStackTrace();
         } catch (IOException e) {
+
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ParseException e) {
+
             e.printStackTrace();
         }
 

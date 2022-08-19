@@ -1,4 +1,4 @@
-package chamsae.koreansignlanguage.domain;
+package chamsae.koreansignlanguage.entity;
 
 import lombok.Getter;
 import lombok.Setter;
