@@ -73,6 +73,16 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMem(id));
     }
 
+    @ApiOperation(value = "회원 정보 수정", notes = "회원의 정보를 수정합니다.")
+    @PutMapping("members/{id}")
+    public ResponseEntity<MemberDTO> updateInfo(@ApiParam(value = "회원 ID", required = true) @PathVariable("id") long id,
+                                                @ApiParam(value = "수정할 정보", required = true) @RequestBody MemberDTO memberDTO) {
+        log.info("members/{} 실행 - 회원 정보 수정 : {}", id, id);
+
+        //수정 성공
+        return ResponseEntity.ok(memberService.updateInfo(id, memberDTO));
+    }
+
     public Boolean deleteId(String email, String pw) {
         return true;
     }
