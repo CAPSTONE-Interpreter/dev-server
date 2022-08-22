@@ -35,16 +35,14 @@ public class MemberController {
     @ApiOperation(value = "회원 등록", notes = "회원을 등록합니다.")
     @PostMapping("members")
     public ResponseEntity<MemberDTO> registerMem(@ApiParam(value = "회원 정보", required = true) @RequestBody MemberDTO memberDTO) {
-        log.info("POST /members 실행 - 회원등록 : {}", memberDTO.toString());
+        log.info("POST /members 실행 - 회원등록 이메일 : {}", memberDTO.getEmail());
 
         //등록 실패
         //1. 이미 가입된 메일로 가입 시도
-//        if(!memberService.checkEmail(memberDTO))
-//            return ResponseEntity
-//                    .badRequest().
-//                    .build();
-
-
+        if(!memberService.checkEmail(memberDTO))
+            return ResponseEntity
+                    .badRequest()
+                    .build();
         //2. 유저 정보가 제대로 넘어오지 않았음, 바디가 비어있음
 
 
