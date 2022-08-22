@@ -2,7 +2,9 @@ package chamsae.koreansignlanguage.service;
 
 import chamsae.koreansignlanguage.DTO.MemberDTO;
 import chamsae.koreansignlanguage.entity.Member;
+import chamsae.koreansignlanguage.mapper.MemberMapper;
 import chamsae.koreansignlanguage.repository.MemberRepository;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,15 +24,19 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
+    private final MemberMapper mapper = Mappers.getMapper(MemberMapper.class);
+
     //회원 등록
     public Member registerMem(MemberDTO memberDTO) {
-            Member member = memberDTO.toEntity();
+            Member member = mapper.toEntity(memberDTO);
             return memberRepository.save(member);
     }
 
     //회원 조회
     public MemberDTO getMem(long id) {
-        return new MemberDTO();
+
+        Member m = memberRepository.findById(id);
+        return mapper.toDto(m);
     }
 
 
