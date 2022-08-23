@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -62,15 +63,15 @@ public class MemberController {
 
     //회원 조회
     @ApiOperation(value = "회원 조회", notes = "회원을 조회합니다.")
-    @GetMapping("members/{id}")
-    public ResponseEntity<MemberDTO> getMem(@ApiParam(value = "회원 ID", required = true) @PathVariable("id") long id) {
-        log.info("members/{} 실행 - 회원 조회 : {}", id, id);
+    @GetMapping("members/{mem_id}")
+    public ResponseEntity<MemberDTO> getMem(@ApiParam(value = "회원 ID", required = true) @PathVariable("mem_id") long mem_id) {
+        log.info("GET /members/{} 실행 - 회원 조회 : {}", mem_id, mem_id);
 
         //조회 실패
         //1. 없는 아이디로 접근
 
         //조회 성공
-        return ResponseEntity.ok(memberService.getMem(id));
+        return ResponseEntity.ok(memberService.getMem(mem_id));
     }
 
     @ApiOperation(value = "회원 정보 수정", notes = "회원의 정보를 수정합니다.")
