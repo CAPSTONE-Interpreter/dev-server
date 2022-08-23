@@ -74,17 +74,26 @@ public class MemberController {
     }
 
     @ApiOperation(value = "회원 정보 수정", notes = "회원의 정보를 수정합니다.")
-    @PutMapping("members/{id}")
-    public ResponseEntity<MemberDTO> updateInfo(@ApiParam(value = "회원 ID", required = true) @PathVariable("id") long id,
+    @PutMapping("members/{mem_id}")
+    public ResponseEntity<MemberDTO> updateInfo(@ApiParam(value = "회원 ID", required = true) @PathVariable("mem_id") long mem_id,
                                                 @ApiParam(value = "수정할 정보", required = true) @RequestBody MemberDTO memberDTO) {
-        log.info("members/{} 실행 - 회원 정보 수정 : {}", id, id);
+        log.info("PUT /members/{} 실행 - 회원 정보 수정 : {}", mem_id, mem_id);
+
+        //수정 실패
+        //1. 없는 아이디로 접근
 
         //수정 성공
-        return ResponseEntity.ok(memberService.updateInfo(id, memberDTO));
+        return ResponseEntity.ok(memberService.updateInfo(mem_id, memberDTO));
     }
 
-    public Boolean deleteId(String email, String pw) {
-        return true;
+    @ApiOperation(value = "회원 삭제", notes = "회원을 삭제합니다.")
+    @DeleteMapping("members/{mem_id}")
+    public ResponseEntity deleteMem(@ApiParam(value = "회원 ID", required = true) @PathVariable long mem_id) {
+        log.info("DELETE members/{} 실행 - 회원 삭제 : {}", mem_id, mem_id);
+
+        //삭제 성공
+        memberService.deleteMem(mem_id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

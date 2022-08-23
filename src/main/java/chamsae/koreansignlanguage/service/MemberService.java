@@ -39,6 +39,29 @@ public class MemberService {
         return mapper.toDto(m);
     }
 
+    //회원 정보 수정
+    public MemberDTO updateInfo(long id, MemberDTO info) {
+
+        System.out.println(id);
+
+        Member m = memberRepository.findById(id);
+        MemberDTO memberDTO = mapper.toDto(m);
+
+        memberDTO.setEmail(info.getEmail());
+        memberDTO.setNickName(info.getNickName());
+        memberDTO.setPwd(info.getPwd());
+
+        memberRepository.save(mapper.toEntity(memberDTO));
+
+        return memberDTO;
+    }
+
+    //회원 삭제
+    public void deleteMem(long memId) {
+
+        Member m = memberRepository.findById(memId);
+        memberRepository.delete(m);
+    }
 
     //중복 이메일 체크
     public boolean checkEmail(MemberDTO memberDTO) {
