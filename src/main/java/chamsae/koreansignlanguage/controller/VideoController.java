@@ -33,12 +33,12 @@ public class VideoController {
     private VideoService videoService;
 
     @ApiOperation(value = "텍스트 검색", notes = "제목을 입력하여 수어사전의 수어 비디오를 검색합니다.")
-    @GetMapping("videos/{text}")
+    @GetMapping("videos")
     public ResponseEntity<Map<String, Object>> findByText(@ApiParam(value = "검색할 단어", required = true) @RequestParam("text") String text){
         //검색 실패
 
         //검색 성공
-        log.info("GET /videos/{} 실행 - 텍스트 검색 : {}", text, text);
+        log.info("GET /videos?text={} 실행 - 텍스트 검색 : {}", text, text);
 
         Map<String, Object> result = videoService.findByText(text);
 
