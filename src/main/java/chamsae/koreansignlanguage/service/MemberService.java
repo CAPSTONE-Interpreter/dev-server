@@ -4,12 +4,18 @@ import chamsae.koreansignlanguage.DTO.MemberDTO;
 import chamsae.koreansignlanguage.entity.Member;
 import chamsae.koreansignlanguage.mapper.MemberMapper;
 import chamsae.koreansignlanguage.repository.MemberRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     //TODO
@@ -21,10 +27,8 @@ public class MemberService {
      * 중복 이메일 체크
      */
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    private final MemberMapper mapper = Mappers.getMapper(MemberMapper.class);
+    final private MemberRepository memberRepository;
+    final private MemberMapper mapper = Mappers.getMapper(MemberMapper.class);
 
     //회원 등록
     public Member registerMem(MemberDTO memberDTO) {
@@ -35,32 +39,34 @@ public class MemberService {
     //회원 조회
     public MemberDTO getMem(long id) {
 
-        Member m = memberRepository.findById(id);
-        return mapper.toDto(m);
+        Optional<Member> m = memberRepository.findById(id);
+        m.orElseThrow(()->new IllegalArgumentException("해당 ID가 존재하지 않습니다. ID : " + id));
+
+        return mapper.toDto(m.get());
     }
 
     //회원 정보 수정
-    public MemberDTO updateInfo(long id, MemberDTO info) {
+    public MemberDTO updateInfo(long id, MemberDTO memberDTO) {
 
-        System.out.println(id);
+//        Member m = memberRepository.find //null로 나올때 처리 추가하기, jpa 메소드 설정 다시보기
+//        MemberDTO memberDTO = mapper.toDto(m);
 
-        Member m = memberRepository.findById(id);
-        MemberDTO memberDTO = mapper.toDto(m);
+        Optional<Member> m = memberRepository.findById(id);
+        m.orElseThrow(()->new IllegalArgumentException("해당 ID가 존재하지 않습니다. ID : " + id));
 
-        memberDTO.setEmail(info.getEmail());
-        memberDTO.setNickName(info.getNickName());
-        memberDTO.setPwd(info.getPwd());
+        m.get().update(memberDTO.getNickName(), memberDTO.getPwd());
+        memberRepository.save(m.get());
 
-        memberRepository.save(mapper.toEntity(memberDTO));
-
-        return memberDTO;
+        return mapper.toDto(m.get());
     }
 
     //회원 삭제
-    public void deleteMem(long memId) {
+    public void deleteMem(long id) {
 
-        Member m = memberRepository.findById(memId);
-        memberRepository.delete(m);
+        Optional<Member> m = memberRepository.findById(id);
+        m.orElseThrow(()->new IllegalArgumentException("해당 ID가 존재하지 않습니다. ID : " + id));
+
+        memberRepository.deleteById(id);
     }
 
     //중복 이메일 체크
@@ -68,16 +74,16 @@ public class MemberService {
         if(memberRepository.findByEmail(memberDTO.getEmail()) == null) return true; //가입 가능
         return false; //가입 불가능
     }
-
-    public Boolean validatePassword(String pw1, String pw2) {
-        if (pw1.equals(pw2)) return true;
-        else return false;
-    }
-
-    public Boolean LogIn(String email, String pw) {
-        Member member = memberRepository.findByEmail(email);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(encoder.matches(pw, member.getPwd())) return true;
-        else return false;
-    }
+//
+//    public Boolean validatePassword(String pw1, String pw2) {
+//        if (pw1.equals(pw2)) return true;
+//        else return false;
+//    }
+//
+//    public Boolean LogIn(String email, String pw) {
+//        Member member = memberRepository.findByEmail(email);
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        if(encoder.matches(pw, member.getPwd())) return true;
+//        else return false;
+//    }
 }
