@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class ScrapId implements Serializable {
 
-    private String email;
-    private int id;
+    private long memId;
+    private long vidId;
 
     public ScrapId() {}
-    public ScrapId(String email, int id) {
-        this.email = email;
-        this.id = id;
+    public ScrapId(long memId, long vidId) {
+        this.memId = memId;
+        this.vidId = vidId;
     }
 
     @Override
@@ -19,11 +19,11 @@ public class ScrapId implements Serializable {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
         ScrapId scrapId = (ScrapId) o;
-        return email.equals(scrapId.email) && (id == scrapId.id);
+        return (memId == scrapId.memId) && (vidId == scrapId.vidId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, id);
+        return Objects.hash(memId, vidId);
     }
 }

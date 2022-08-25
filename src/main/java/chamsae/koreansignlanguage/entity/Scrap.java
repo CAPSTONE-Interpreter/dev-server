@@ -1,13 +1,16 @@
 package chamsae.koreansignlanguage.entity;
 
+import chamsae.koreansignlanguage.DTO.ScrapDTO;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
-@Setter
 @Entity
+@NoArgsConstructor
 @IdClass(ScrapId.class)
 public class Scrap {
 
@@ -22,7 +25,13 @@ public class Scrap {
 //    private Video video;
 
     @Id
-    private String email;
+    private long memId;
     @Id
-    private int id;
+    private long vidId;
+
+    @Builder
+    public Scrap(long memId, long vidId) {
+        this.memId = memId;
+        this.vidId = vidId;
+    }
 }

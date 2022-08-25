@@ -15,6 +15,6 @@ public interface ScrapRepository extends JpaRepository<Scrap, ScrapId> {
     * 테이블에서 삭제 delete
     * 테이블에서 가져오기 findAll
     */
-    List<Scrap> findByEmail(String email);
+    List<Scrap> findByMemId(long memId);
 
 }
