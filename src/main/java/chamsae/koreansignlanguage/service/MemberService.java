@@ -28,7 +28,8 @@ public class MemberService {
      */
 
     final private MemberRepository memberRepository;
-    final private MemberMapper mapper = Mappers.getMapper(MemberMapper.class);
+
+    private MemberMapper mapper = Mappers.getMapper(MemberMapper.class);
 
     //회원 등록
     public Member registerMem(MemberDTO memberDTO) {
