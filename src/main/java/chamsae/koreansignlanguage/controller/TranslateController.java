@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,14 @@ public class TranslateController {
     @GetMapping("translate")
     public ResponseEntity<String> makeWord(@ApiParam(value = "자모음", required = true) @RequestParam("word") String word) {
 
-        //단어 조합 성공
         log.info("GET /translate?word={} 실행 - 단어 조합 : {}", word, word);
+
+        if(word.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("서버로 전달 된 자모음이 없습니다.");
+
+        //단어 조합 성공
         return ResponseEntity.ok(translateService.springToFlask(word));
     }
 }
