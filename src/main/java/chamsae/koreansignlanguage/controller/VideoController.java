@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -45,17 +46,24 @@ public class VideoController {
         return ResponseEntity.ok().body(result);
     }
 
-    @ApiOperation(value = "사진 검색", notes = "사진을 찍어 인식된 글자로 수어 비디를 검색합니다.")
+    @ApiOperation(value = "사진 인식", notes = "OCR 기능으로 해당 사진에 존재하는 텍스트를 반환합니다.")
     @PostMapping("videos/photos")
-    public ResponseEntity<Map<String, Object>> searchByPhoto(@ApiParam(value = "첨부할 사진", required = true) @RequestPart("file") MultipartFile file) {
-        //검색 실패
+    public ResponseEntity searchByPhoto(@ApiParam(value = "첨부할 사진", required = true) @RequestPart("file") MultipartFile file) {
+        log.info("POST /videos/photos 실행 - 사진 인식 : {}", file);
 
-        //검색 성공
-        log.info("POST /videos/photos 실행 - 사진 검색 : {}", file);
 
-        Map<String, Object> result = videoService.findByPhoto(file);
+        List<String> result = videoService.findByPhoto(file);
 
+        //인식 실패
+        if(result.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("이미지로부터 글자를 인식하지 못했습니다.");
+        }
+
+        //인식 성공
         return ResponseEntity.ok().body(result);
+
     }
 
 }

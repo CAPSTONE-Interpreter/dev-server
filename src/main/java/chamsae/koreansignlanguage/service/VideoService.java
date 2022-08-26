@@ -46,24 +46,15 @@ public class VideoService {
     }
 
     //사진 검색
-    public Map<String, Object> findByPhoto(MultipartFile file) {
-        Map<String, Object> result = new HashMap<>();
-        Map<String, Object> map = new HashMap<>();
+    public List<String> findByPhoto(MultipartFile file) {
+
+        List<String> result = new ArrayList<>();
 
         try {
-            List<String> ocrList = connectWithFlask.sendImage(file);
-            for(String text : ocrList) {
-                List<Video> videos = videoRepository.findByTitleContaining(text);
-
-                map.put("text", text);
-                map.put("data", videos);
-                map.put("count", videos.size());
-            }
+            result = connectWithFlask.sendImage(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        result.put("list", map);
 
         return result;
     }
