@@ -72,8 +72,11 @@ public class MemberService {
 
     //중복 이메일 체크
     public boolean checkEmail(MemberDTO memberDTO) {
-        if(memberRepository.findByEmail(memberDTO.getEmail()) == null) return true; //가입 가능
-        return false; //가입 불가능
+
+        String newMail = memberDTO.getEmail();
+        Member oldMem = memberRepository.findByEmail(newMail);
+
+        return oldMem == null || !oldMem.getEmail().equals(newMail); //가입 불가능
     }
 //
 //    public Boolean validatePassword(String pw1, String pw2) {
