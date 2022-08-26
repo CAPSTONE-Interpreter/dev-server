@@ -35,15 +35,21 @@ public class VideoController {
 
     @ApiOperation(value = "텍스트 검색", notes = "제목을 입력하여 수어사전의 수어 비디오를 검색합니다.")
     @GetMapping("videos")
-    public ResponseEntity<Map<String, Object>> findByText(@ApiParam(value = "검색할 단어", required = true) @RequestParam("text") String text){
-        //검색 실패
+    public ResponseEntity findByText(@ApiParam(value = "검색할 단어", required = true) @RequestParam("text") String text){
 
-        //검색 성공
         log.info("GET /videos?text={} 실행 - 텍스트 검색 : {}", text, text);
 
         Map<String, Object> result = videoService.findByText(text);
 
-        return ResponseEntity.ok().body(result);
+        //검색 실패
+        //1. 검색에 대한 결과 리스트가 비어있음(검색 결과 없음)
+        if((int)result.get("count") != 0)
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("해당하는 검색어에 대한 결과가 없습니다.");
+
+        //검색 성공
+        return ResponseEntity.ok(result);
     }
 
     @ApiOperation(value = "사진 인식", notes = "OCR 기능으로 해당 사진에 존재하는 텍스트를 반환합니다.")
