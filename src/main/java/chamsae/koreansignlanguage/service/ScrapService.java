@@ -3,6 +3,7 @@ package chamsae.koreansignlanguage.service;
 import chamsae.koreansignlanguage.DTO.ScrapDTO;
 import chamsae.koreansignlanguage.entity.Member;
 import chamsae.koreansignlanguage.entity.Scrap;
+import chamsae.koreansignlanguage.entity.ScrapId;
 import chamsae.koreansignlanguage.entity.Video;
 import chamsae.koreansignlanguage.mapper.ScrapMapper;
 import chamsae.koreansignlanguage.repository.MemberRepository;
@@ -56,6 +57,12 @@ public class ScrapService {
 
 
     public Scrap registerScrap(ScrapDTO scrapDTO) {
+
+        long vidId = scrapDTO.getVidId();
+
+        Video v = videoRepository.findById(vidId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 비디오 ID가 존재하지 않습니다. ID : " + vidId));
+
         return scrapRepository.save(mapper.toEntity(scrapDTO));
     }
 
