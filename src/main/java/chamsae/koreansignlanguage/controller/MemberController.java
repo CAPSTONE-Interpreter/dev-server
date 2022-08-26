@@ -35,18 +35,15 @@ public class MemberController {
     //회원 등록
     @ApiOperation(value = "회원 등록", notes = "회원을 등록합니다.")
     @PostMapping("members")
-    public ResponseEntity<MemberDTO> registerMem(@ApiParam(value = "회원 정보", required = true) @RequestBody MemberDTO memberDTO) {
+    public ResponseEntity registerMem(@ApiParam(value = "회원 정보", required = true) @RequestBody MemberDTO memberDTO) {
         log.info("POST /members 실행 - 회원등록 이메일 : {}", memberDTO.getEmail());
 
         //등록 실패
         //1. 이미 가입된 메일로 가입 시도
         if(!memberService.checkEmail(memberDTO))
             return ResponseEntity
-                    .badRequest()
-                    .build();
-        //2. 유저 정보가 제대로 넘어오지 않았음, 바디가 비어있음
-
-
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("해당 이메일로 가입한 회원이 존재합니다.");
 
         //등록 성공
         Member mem = memberService.registerMem(memberDTO);
@@ -64,27 +61,42 @@ public class MemberController {
     //회원 조회
     @ApiOperation(value = "회원 조회", notes = "회원을 조회합니다.")
     @GetMapping("members/{mem_id}")
-    public ResponseEntity<MemberDTO> getMem(@ApiParam(value = "회원 ID", required = true) @PathVariable("mem_id") long mem_id) {
+    public ResponseEntity getMem(@ApiParam(value = "회원 ID", required = true) @PathVariable("mem_id") long mem_id) {
         log.info("GET /members/{} 실행 - 회원 조회 : {}", mem_id, mem_id);
 
-        //조회 실패
-        //1. 없는 아이디로 접근
+        try {
+            //조회 성공
+            return ResponseEntity.ok(memberService.getMem(mem_id));
+        }
+        catch (IllegalArgumentException e) {
+            //조회 실패
+            //1. 없는 아이디로 접근
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("해당 멤버 아이디는 존재하지 않습니다. 잘못된 경로입니다.");
+        }
 
-        //조회 성공
-        return ResponseEntity.ok(memberService.getMem(mem_id));
     }
 
     @ApiOperation(value = "회원 정보 수정", notes = "회원의 정보를 수정합니다.")
     @PutMapping("members/{mem_id}")
-    public ResponseEntity<MemberDTO> updateInfo(@ApiParam(value = "회원 ID", required = true) @PathVariable("mem_id") long mem_id,
+    public ResponseEntity updateInfo(@ApiParam(value = "회원 ID", required = true) @PathVariable("mem_id") long mem_id,
                                                 @ApiParam(value = "수정할 정보", required = true) @RequestBody MemberDTO memberDTO) {
         log.info("PUT /members/{} 실행 - 회원 정보 수정 : {}", mem_id, mem_id);
 
-        //수정 실패
-        //1. 없는 아이디로 접근
-
-        //수정 성공
-        return ResponseEntity.ok(memberService.updateInfo(mem_id, memberDTO));
+        try {
+            //수정 성공
+            return ResponseEntity.ok(memberService.updateInfo(mem_id, memberDTO));
+        }
+        catch (IllegalArgumentException e) {
+            //수정 실패
+            //1. 없는 아이디로 접근
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("해당 멤버 아이디는 존재하지 않습니다. 잘못된 경로입니다.");
+        }
     }
 
     @ApiOperation(value = "회원 삭제", notes = "회원을 삭제합니다.")
@@ -92,9 +104,20 @@ public class MemberController {
     public ResponseEntity deleteMem(@ApiParam(value = "회원 ID", required = true) @PathVariable long mem_id) {
         log.info("DELETE members/{} 실행 - 회원 삭제 : {}", mem_id, mem_id);
 
-        //삭제 성공
-        memberService.deleteMem(mem_id);
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            //삭제 성공
+            memberService.deleteMem(mem_id);
+            return ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다.");
+        }
+        catch (IllegalArgumentException e) {
+            //삭제 실패
+            //1. 없는 아이디로 접근
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("해당 멤버 아이디는 존재하지 않습니다. 잘못된 경로입니다.");
+        }
+
     }
 
 }
