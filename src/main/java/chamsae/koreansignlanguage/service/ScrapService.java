@@ -1,5 +1,6 @@
 package chamsae.koreansignlanguage.service;
 
+import chamsae.koreansignlanguage.DTO.FindScrapsResDTO;
 import chamsae.koreansignlanguage.DTO.ScrapDTO;
 import chamsae.koreansignlanguage.entity.Member;
 import chamsae.koreansignlanguage.entity.Scrap;
@@ -15,6 +16,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -31,28 +33,23 @@ public class ScrapService {
 //    private MemberRepository
 
     //해당 회원 스크랩 목록 조회하기
-    public Map<String, Object> findByMemId(long memId) {
-        Map<String, Object> result = new HashMap<>();
-        List<Video> videos = new ArrayList<>();
+    public FindScrapsResDTO findByMemId(long memId) {
 
-        Optional<Member> m = memberRepository.findById(memId);
-        m.orElseThrow(()->new IllegalArgumentException("해당 ID가 존재하지 않습니다. ID : " + memId));
+        //실패 1. 해당 멤버가 DB에 존재하지 않음, 잘못된 uri
+        Member m = memberRepository.findById(memId).orElseThrow(()->new IllegalArgumentException("해당 ID가 존재하지 않습니다. ID : " + memId));
 
-        List<Scrap> scraps = scrapRepository.findByMemId(memId);
+        List<Long> scraps = scrapRepository.findByMemId(memId)
+                .stream()
+                .map(Scrap::getVidId)
+                .collect(Collectors.toList());
 
-        if(!scraps.isEmpty()) {
-            result.put("mem_id", memId);
+        List<Video> videos = videoRepository.findAllById(scraps);
+        int cnt = videos.size();
 
-            for(Scrap s : scraps) {
-                Optional<Video> v = videoRepository.findById(s.getVidId());
-                v.ifPresent(video -> videos.add(video));
-            }
+        //실패 2. 해당 멤버의 스크랩이 존재하지 않음.
+        //cnt == 0이면 exception 던지기
 
-            result.put("data", videos);
-            result.put("count", videos.size());
-        }
-
-        return result;
+        return new FindScrapsResDTO(memId, videos, videos.size());
     }
 
 
@@ -60,6 +57,7 @@ public class ScrapService {
 
         long vidId = scrapDTO.getVidId();
 
+        //실패 1. 해당 비디오
         Video v = videoRepository.findById(vidId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 비디오 ID가 존재하지 않습니다. ID : " + vidId));
 
