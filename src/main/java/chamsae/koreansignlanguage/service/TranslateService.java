@@ -11,6 +11,9 @@ public class TranslateService {
     private ConnectWithFlask connectWithFlask;
 
     public String springToFlask(String word) {
+
+        //실패 1. request 가 비어있음
+        //if(word.isEmpty()) exception
         return connectWithFlask.sendLetters(word);
     }
 

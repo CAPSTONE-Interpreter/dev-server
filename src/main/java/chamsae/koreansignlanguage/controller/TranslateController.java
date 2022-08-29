@@ -28,12 +28,6 @@ public class TranslateController {
 
         log.info("GET /translate?word={} 실행 - 단어 조합 : {}", word, word);
 
-        if(word.isEmpty())
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("서버로 전달 된 자모음이 없습니다.");
-
-        //단어 조합 성공
         return ResponseEntity.ok(translateService.springToFlask(word));
     }
 }
