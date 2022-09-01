@@ -1,21 +1,18 @@
 package chamsae.koreansignlanguage.service;
 
+import chamsae.koreansignlanguage.DTO.VideoPhotoResDTO;
+import chamsae.koreansignlanguage.DTO.VideoTextResDTO;
 import chamsae.koreansignlanguage.entity.Video;
 import chamsae.koreansignlanguage.repository.VideoRepository;
 import chamsae.koreansignlanguage.util.ConnectWithFlask;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -34,24 +31,25 @@ public class VideoService {
     private ConnectWithFlask connectWithFlask;
 
     //텍스트 검색
-    public Map<String, Object> findByText(String text) {
-        Map<String, Object> result = new HashMap<>();
+    public VideoTextResDTO findByText(String text) {
         List<Video> videos = videoRepository.findByTitleContaining(text);
+        int cnt = videos.size();
 
-        result.put("text", text);
-        result.put("data", videos);
-        result.put("count", videos.size());
+        //실패 1. 해당 text(title) 로 찾을 수 있는 비디오 정보가 없음
+        //cnt == 0 일때 404 날려주기
 
-        return result;
+        return new VideoTextResDTO(text, videos, cnt);
     }
 
     //사진 검색
-    public List<String> findByPhoto(MultipartFile file) {
+    public VideoPhotoResDTO findByPhoto(MultipartFile file) {
 
-        List<String> result = new ArrayList<>();
+        VideoPhotoResDTO result = new VideoPhotoResDTO();
 
         try {
-            result = connectWithFlask.sendImage(file);
+            result = new VideoPhotoResDTO(connectWithFlask.sendImage(file));
+            //if(result.isEmpty()) => 404 처리 exception 날리기
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
         }
