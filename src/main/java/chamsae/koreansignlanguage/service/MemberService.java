@@ -36,8 +36,8 @@ public class MemberService {
     public Member registerMem(MemberDTO memberDTO) {
 
         //실패 1. 해당 이메일로 가입된 정보가 있음.
-        if(!checkEmail(memberDTO))
-            throw new EmailCheckException();
+        //그렇다면 exception 발생 -> bad request 떨어짐
+        checkEmail(memberDTO.getEmail());
 
         Member member = mapper.toEntity(memberDTO);
         return memberRepository.save(member);
@@ -73,12 +73,11 @@ public class MemberService {
     }
 
     //중복 이메일 체크
-    public boolean checkEmail(MemberDTO memberDTO) {
+    public void checkEmail(String newMail) {
 
-        String newMail = memberDTO.getEmail();
-        Member oldMem = memberRepository.findByEmail(newMail);
-
-        return oldMem == null || !oldMem.getEmail().equals(newMail); //가입 불가능
+        //중복 시 exception 던지기
+        memberRepository.findByEmail(newMail)
+                .orElseThrow(EmailCheckException::new);
     }
 //
 //    public Boolean validatePassword(String pw1, String pw2) {
