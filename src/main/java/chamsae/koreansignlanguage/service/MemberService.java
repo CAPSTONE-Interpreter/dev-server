@@ -2,6 +2,7 @@ package chamsae.koreansignlanguage.service;
 
 import chamsae.koreansignlanguage.DTO.MemberDTO;
 import chamsae.koreansignlanguage.entity.Member;
+import chamsae.koreansignlanguage.error.EmailCheckException;
 import chamsae.koreansignlanguage.mapper.MemberMapper;
 import chamsae.koreansignlanguage.repository.MemberRepository;
 import lombok.AllArgsConstructor;
@@ -35,8 +36,8 @@ public class MemberService {
     public Member registerMem(MemberDTO memberDTO) {
 
         //실패 1. 해당 이메일로 가입된 정보가 있음.
-//        if(!checkEmail(memberDTO))
-            //exception 던지기
+        if(!checkEmail(memberDTO))
+            throw new EmailCheckException();
 
         Member member = mapper.toEntity(memberDTO);
         return memberRepository.save(member);
